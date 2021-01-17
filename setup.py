@@ -34,11 +34,11 @@ install_requires = ['python-dateutil', 'requests', 'numpy>=1.15', 'qtpy']
 # Because pip doesn't recognize it when PySide is installed by conda from conda-forge
 # Try to import PySide.  If it fails, add the PySide to the install_requires
 # Because of this, the conda meta.yaml will require PySide to build SHARPpy
-#try:
-#    import qtpy
-#    print("Success importing PySide")
-#except:
-#    install_requires.append("PySide2==5.12.*")    
+try:
+   import qtpy
+   print("Success importing PySide")
+except:
+   install_requires.append("PySide2==5.12.*")
 
 entry_pts = {"console_scripts": ['sharppy = runsharp.full_gui:main'] }
 # Create some directory variables to shorten the lines.

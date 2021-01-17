@@ -2,6 +2,7 @@
 from __future__ import division
 import numpy as np
 import numpy.ma as ma
+import math
 from sharppy.sharptab.constants import MISSING, TOL
 
 __all__ = ['INT2STR','FLOAT2STR','MS2KTS', 'KTS2MS', 'MS2MPH']
@@ -388,9 +389,36 @@ def mag(u, v, missing=MISSING):
 def QC(val):
     '''
         Tests if a value is masked.
-        
-        '''
+    '''
     if type(val) == type(ma.masked): return False
     return True
+
+def sr_rotate(u, v, r_u, r_v):
+    """
+    Rotates u,v values to storm relative position
+
+    Parameters
+    ----------
+
+    u : number, array_like
+        U-component of vectors
+    v : number, array_like
+        V-component of vectors
+    r_u : number, float or int
+        U-component of the rotation vector
+    r_v : number, float or int
+        V-component of the rotation vector
+
+    Returns
+    -------
+    Rotated vectors
+    """
+    deg = comp2vec(r_u, r_v)[0] - 180
+    un = u - r_u
+    vn = v - r_v
+    u = un * math.cos(deg) + vn * math.sin(deg)
+    v = -un * math.sin(deg) + vn * math.cos(deg)
+
+    return u, v
 
 
