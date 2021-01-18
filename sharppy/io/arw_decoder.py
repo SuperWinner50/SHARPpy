@@ -124,7 +124,7 @@ class ARWDecoder(Decoder):
             mpres = (file_data.variables["P"][:, idx[0], idx[1]] + file_data.variables["PB"][:, idx[0], idx[1]]) * .01
             mhght = file_data.variables["PH"][:, idx[0], idx[1]] + file_data.variables["PHB"][:, idx[0], idx[1]] / G
             ## unstagger the height grid
-            mhght = ( mhght[:-1, :, :] + mhght[1:, :, :] ) / 2.
+            mhght = (mhght[:-1, :, :] + mhght[1:, :, :]) / 2.
 
             muwin = file_data.variables["U"][:, idx[0], idx[1]]
             mvwin = file_data.variables["V"][:, idx[0], idx[1]]

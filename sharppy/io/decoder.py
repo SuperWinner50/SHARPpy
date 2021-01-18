@@ -112,6 +112,7 @@ class Decoder(object):
     def getStnId(self):
         return self._prof_collection.getMeta('loc')
 
+
 if __name__ == "__main__":
     print("Creating bufkit decoder ...")
     bd = BufDecoder()

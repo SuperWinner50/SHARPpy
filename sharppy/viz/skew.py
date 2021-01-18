@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 
 __all__ = ['backgroundSkewT', 'plotSkewT']
 
+
 class backgroundSkewT(QWidget):
     def __init__(self, plot_omega=False):
         super(backgroundSkewT, self).__init__()
@@ -29,7 +30,7 @@ class backgroundSkewT(QWidget):
         '''
         logging.debug("Initalizing the backgroundSkewT.")
 
-        self.lpad = 30; self.rpad = 65
+        self.lpad = 40; self.rpad = 65
         self.tpad = 20; self.bpad = 20
         self.tlx = self.rpad; self.tly = self.tpad
         self.wid = self.size().width() - self.rpad
@@ -53,12 +54,13 @@ class backgroundSkewT(QWidget):
         else:
             fsize = 7
             fsizet = 14
-        self.title_font = QtGui.QFont('Helvetica', fsizet + (self.hgt * 0.006))
+        self.title_font = QtGui.QFont('Helvetica', 11)  # Using 11, can make it use fsize if you want
         self.title_metrics = QtGui.QFontMetrics( self.title_font )
-        #self.title_font.setBold(True)
-        self.title_height = self.title_metrics.xHeight() + 5 + (self.hgt * 0.003)
+        self.title_height = self.title_metrics.xHeight() + 5 + (self.hgt * 0.001)  # No use whatsoever
 
-        self.label_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.0045))
+        self.label_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.004))
+        self.label_metrics = QtGui.QFontMetrics(self.label_font)
+
         self.environment_trace_font = QtGui.QFont('Helvetica', 11 + (self.hgt * 0.0045))
         self.in_plot_font = QtGui.QFont('Helvetica', fsize + (self.hgt * 0.0045))
         self.esrh_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.0045))
@@ -243,15 +245,13 @@ class backgroundSkewT(QWidget):
         '''
         logging.debug("Drawing isotherm label: " + str(t))
         pen = QtGui.QPen(self.fg_color)
-        self.label_font.setBold(True)
         qp.setFont(self.label_font)
         x1 = self.originx + self.tmpc_to_pix(t, self.pmax) / self.scale
 
         if x1 >= self.lpad and x1 <= self.wid:
             qp.setClipping(False)
-            qp.drawText(x1-10, self.bry+2, 20, 20,
-                        QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter, tab.utils.INT2STR(t))
-        self.label_font.setBold(False)
+            qp.drawText(x1-10, self.bry+2, 25, 20,
+                        Qt.AlignCenter, tab.utils.INT2STR(t))
 
     def draw_isotherm(self, t, qp):
         '''
@@ -281,7 +281,6 @@ class backgroundSkewT(QWidget):
         logging.debug("Drawing background isobar: " + str(p) + ' flag: ' + str(flag))
         pen = QtGui.QPen(self.fg_color, 1, QtCore.Qt.SolidLine)
         qp.setPen(pen)
-        self.label_font.setBold(True)
         qp.setFont(self.label_font)
         y1 = self.originy + self.pres_to_pix(p) / self.scale
         if y1 >= self.tpad and y1 <= self.hgt:
@@ -333,8 +332,6 @@ class backgroundSkewT(QWidget):
         scl2 = self.bry - float(y)
         scl3 = self.bry - self.tly + 1
         return self.pmax / np.exp((scl2 / scl3) * scl1)
-
-
 
 
 class plotSkewT(backgroundSkewT):
@@ -1112,8 +1109,8 @@ class plotSkewT(backgroundSkewT):
 
         pen = QtGui.QPen(self.fg_color, 1, QtCore.Qt.SolidLine)
         qp.setPen(pen)
-
-        rect0 = QtCore.QRect(self.lpad, 2, box_width, self.title_height)
+        print(main_title)
+        rect0 = QtCore.QRect(self.lpad, -2, box_width, self.title_height)
         qp.drawText(rect0, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, main_title)
 
         bg_color_idx = 0
@@ -1134,14 +1131,14 @@ class plotSkewT(backgroundSkewT):
         qp.setFont(self.hght_font)
         offset = 10
         txt_offset = 15
-        sfc = tab.interp.hght( self.prof, self.prof.pres[self.prof.sfc] )
+        sfc = tab.interp.hght(self.prof, self.prof.pres[self.prof.sfc])
         p1 = tab.interp.pres(self.prof, h+sfc)
-        if np.isnan(p1) == False:
+        if not np.isnan(p1):
             y1 = self.originy + self.pres_to_pix(p1) / self.scale
             qp.drawLine(self.lpad, y1, self.lpad+offset, y1)
             qp.drawText(self.lpad+txt_offset, y1-20, self.lpad+txt_offset, 40,
-                QtCore.Qt.AlignVCenter | QtCore.Qt.AlignLeft,
-                tab.utils.INT2STR(h/1000)+' km')
+                        Qt.AlignVCenter,
+                        tab.utils.INT2STR(h/1000)+' km')
 
     def draw_sig_levels(self, qp, plevel=1000, color=None, var_id=""):
         logging.debug("Drawing significant levels.")
@@ -1203,7 +1200,7 @@ class plotSkewT(backgroundSkewT):
             pen = QtGui.QPen(self.lfc_mkr_color, 2, QtCore.Qt.SolidLine)
             qp.setPen(pen)
             qp.drawLine(x[0], y, x[1], y)
-            rect2 = QtCore.QRectF(x[0], y-8, x[1] - x[0], 4)
+            rect2 = QtCore.QRectF(x[0], y-11, x[1] - x[0], 4)
             qp.drawText(rect2, QtCore.Qt.TextDontClip | QtCore.Qt.AlignCenter, "LFC")
         # Plot EL
         if tab.utils.QC(elp) and elp != lclp:
@@ -1211,15 +1208,15 @@ class plotSkewT(backgroundSkewT):
             pen = QtGui.QPen(self.el_mkr_color, 2, QtCore.Qt.SolidLine)
             qp.setPen(pen)
             qp.drawLine(x[0], y, x[1], y)
-            rect3 = QtCore.QRectF(x[0], y-8, x[1] - x[0], 4)
+            rect3 = QtCore.QRectF(x[0], y-11, x[1] - x[0], 4)
             qp.drawText(rect3, QtCore.Qt.TextDontClip | QtCore.Qt.AlignCenter, "EL")
 
     def draw_temp_levels(self, qp):
         if self.pcl is None:
             return
         xbounds = [37,41]
-        x = self.tmpc_to_pix(xbounds, [1000.,1000.])
-        lvls = [[self.pcl.p0c,self.pcl.hght0c, '0 C'], [self.pcl.pm20c, self.pcl.hghtm20c, '-20 C'],[self.pcl.pm30c, self.pcl.hghtm30c, '-30 C']]
+        x = self.tmpc_to_pix(xbounds, [1000., 1000.])
+        lvls = [[self.pcl.p0c,self.pcl.hght0c, '0 C'], [self.pcl.pm20c, self.pcl.hghtm20c, '-20 C'], [self.pcl.pm30c, self.pcl.hghtm30c, '-30 C']]
 
         qp.setClipping(True)
         for p, h, t in lvls:
@@ -1350,9 +1347,9 @@ class plotSkewT(backgroundSkewT):
             x2 = self.tmpc_to_pix(-33, 1000)
             y1 = self.originy + self.pres_to_pix(pbot) / self.scale
             y2 = self.originy + self.pres_to_pix(ptop) / self.scale
-            rect1 = QtCore.QRectF(x2, y1+4, 25, self.esrh_height)
-            rect2 = QtCore.QRectF(x2, y2-self.esrh_height, 50, self.esrh_height)
-            rect3 = QtCore.QRectF(x1-15, y2-self.esrh_height, 50, self.esrh_height)
+            rect1 = QtCore.QRectF(x1-15, y1+2, 30, self.esrh_height)
+            rect2 = QtCore.QRectF(x1-25, y2-self.esrh_height-3, 50, self.esrh_height)
+            rect3 = QtCore.QRectF(x1, (y1+y2-self.esrh_height)/2-2, 50, self.esrh_height)
             pen = QtGui.QPen(self.bg_color, 0, QtCore.Qt.SolidLine)
             brush = QtGui.QBrush(self.bg_color, QtCore.Qt.SolidPattern)
             qp.setPen(pen)
@@ -1362,9 +1359,9 @@ class plotSkewT(backgroundSkewT):
                 text_bot = 'SFC'
             else:
                 text_bot = tab.interp.hght(self.prof, pbot) - sfc
-                text_bot = tab.utils.INT2STR( text_bot ) + 'm'
+                text_bot = tab.utils.INT2STR(text_bot) + 'm'
             text_top = tab.interp.hght(self.prof, ptop) - sfc
-            text_top = tab.utils.INT2STR( text_top ) + 'm'
+            text_top = tab.utils.INT2STR(text_top) + 'm'
             qp.drawRect(rect1)
             qp.drawRect(rect2)
             qp.drawRect(rect3)
@@ -1375,9 +1372,9 @@ class plotSkewT(backgroundSkewT):
             qp.drawLine(x1-len, y2, x1+len, y2)
             qp.drawLine(x1, y1, x1, y2)
             qp.setClipping(False)
-            qp.drawText(rect1, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, text_bot)
+            qp.drawText(rect1, QtCore.Qt.TextDontClip | Qt.AlignCenter, text_bot)
             qp.setClipping(True)
-            qp.drawText(rect2, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, text_top)
+            qp.drawText(rect2, QtCore.Qt.TextDontClip | Qt.AlignCenter, text_top)
 
             if self.use_left:
                 esrh = self.prof.left_esrh[0]
@@ -1385,7 +1382,7 @@ class plotSkewT(backgroundSkewT):
                 esrh = self.prof.right_esrh[0]
 
             qp.drawText(rect3, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft,
-                tab.utils.INT2STR(esrh) + ' m2s2')
+                tab.utils.INT2STR(esrh) + 'm2s2')
            # qp.drawText(x1-2*len, y1-text_offset, 40, 40,
            #     QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight,
            #     text_bot)
@@ -1455,7 +1452,7 @@ class plotSkewT(backgroundSkewT):
 
         qp.drawPath(path)
 
-        if label is True:
+        if label is True and color in [self.temp_color, self.dewp_color]:  # Only draw temp and dewp
             qp.setClipping(False)
             if self.sfc_units == 'Celsius':
                 label = data[0]
@@ -1465,12 +1462,21 @@ class plotSkewT(backgroundSkewT):
             brush = QtGui.QBrush(self.bg_color, QtCore.Qt.SolidPattern)
             qp.setPen(pen)
             qp.setBrush(brush)
-            rect = QtCore.QRectF(x[0]-8, y[0]+4, 16, 12)
+            metric = self.label_metrics.boundingRect(tab.utils.INT2STR(label))
+
+            # Some stuff to make sure temp and dewp dont overlap
+            location = -(metric.width() + 8)/2
+            if color == self.temp_color:
+                location = 0
+            elif color == self.dewp_color:
+                location = -metric.width() - 8
+
+            rect = QtCore.QRectF(x[0]+location, y[0]+5, metric.width()+8, metric.height()-4)
             qp.drawRect(rect)
             pen = QtGui.QPen(QtGui.QColor(color), 3, QtCore.Qt.SolidLine)
             qp.setPen(pen)
             qp.setFont(self.environment_trace_font)
-            qp.drawText(rect, QtCore.Qt.AlignCenter, tab.utils.INT2STR(label))
+            qp.drawText(rect, Qt.AlignVCenter, tab.utils.INT2STR(label))
             qp.setClipping(True)
 
     def drawSTDEV(self, pres, data, stdev, color, qp, width=1):
