@@ -730,8 +730,9 @@ class plotHodo(backgroundHodo):
                     supercell_type = "HP"
                 qp.drawText(rect, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, "9 - 11 km SR-Wind: " + tab.utils.INT2STR(np.float64(dir)) + '/' + tab.utils.INT2STR(spd) + ' kts - (' + supercell_type + ')')
                 # Removing this function until @wblumberg can finish fixing this function.
-                # Draw the descrete vs mixed/linear mode output only if there is an LCL-EL layer.
                 """
+                # Draw the descrete vs mixed/linear mode output only if there is an LCL-EL layer.
+                
                 norm_Shear, mode_Shear, norm_Wind, norm_Mode = self.calculateStormMode()
  
                 if tab.utils.QC(norm_Wind) and self.prof.mupcl.bplus != 0:
@@ -1071,7 +1072,7 @@ class plotHodo(backgroundHodo):
         color.setAlpha(0)
         pen = QtGui.QPen(color, 0, QtCore.Qt.SolidLine)
         qp.setPen(pen)
-        v_offset = 5; h_offset = 1; width = 40; hght = 12
+        v_offset = 5; h_offset = 1; width = 60; hght = 12
 
         mw_rect = QtCore.QRectF(mean_u+h_offset, mean_v+v_offset, width, hght)
         qp.drawRect(mw_rect)
