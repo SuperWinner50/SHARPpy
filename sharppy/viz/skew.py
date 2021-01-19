@@ -1109,7 +1109,6 @@ class plotSkewT(backgroundSkewT):
 
         pen = QtGui.QPen(self.fg_color, 1, QtCore.Qt.SolidLine)
         qp.setPen(pen)
-        print(main_title)
         rect0 = QtCore.QRect(self.lpad, -2, box_width, self.title_height)
         qp.drawText(rect0, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, main_title)
 
