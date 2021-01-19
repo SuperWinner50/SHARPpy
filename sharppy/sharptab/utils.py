@@ -2,7 +2,6 @@
 from __future__ import division
 import numpy as np
 import numpy.ma as ma
-import math
 from sharppy.sharptab.constants import MISSING, TOL
 
 __all__ = ['INT2STR','FLOAT2STR','MS2KTS', 'KTS2MS', 'MS2MPH']
@@ -413,12 +412,13 @@ def sr_rotate(u, v, r_u, r_v):
     -------
     Rotated vectors
     """
-    deg = comp2vec(r_u, r_v)[0] - 180
-    un = u - r_u
-    vn = v - r_v
-    u = un * math.cos(deg) + vn * math.sin(deg)
-    v = -un * math.sin(deg) + vn * math.cos(deg)
+
+    # I know someone can clean this up
+    deg = np.arctan2(r_u, r_v)
+    nu = u - r_u
+    nv = v - r_v
+
+    u = nu * np.cos(deg) - nv * np.sin(deg)
+    v = nu * np.sin(deg) + nv * np.cos(deg)
 
     return u, v
-
-
