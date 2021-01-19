@@ -22,12 +22,17 @@ class SPCDecoder(Decoder):
     def _parse(self):
         file_data = self._downloadFile()
         ## read in the file
-        data = np.array([l.strip() for l in file_data.split('\n')])
+        data = np.array([l.strip() for l in file_data.split('\n') if l.strip()])
 
         ## necessary index points
         title_idx = np.where( data == '%TITLE%')[0][0]
         start_idx = np.where( data == '%RAW%' )[0][0] + 1
-        finish_idx = np.where( data == '%END%')[0][0]
+        finish_idx = np.where( data == '%END%')[0]
+        # Made %END% unnecessary
+        if finish_idx:
+            finish_idx = finish_idx[0]
+        else:
+            finish_idx = max(n for n, line in enumerate(data) if len(line.split(',')) == 6) + 1
 
         ## create the plot title
         data_header = data[title_idx + 1].split()
