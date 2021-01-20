@@ -87,12 +87,13 @@ class Draggable(object):
         """
         lb_idx, ub_idx = max(self._drag_idx - 1, 0), min(self._drag_idx + 1, self._x_obj.shape[0] - 1)
 
-        while lb_idx >= 0 and (self._x_obj.mask[lb_idx] or self._y_obj.mask[lb_idx]):
+        # Removed the indexing because mask lengths were 1
+        while lb_idx >= 0 and (self._x_obj.mask or self._y_obj.mask):
             lb_idx -= 1
 
-        while ub_idx < self._x_obj.shape[0] and (self._x_obj.mask[ub_idx] or self._y_obj.mask[ub_idx]):
+        while ub_idx < self._x_obj.shape[0] and (self._x_obj.mask or self._y_obj.mask):
             ub_idx += 1
-
+        
         if lb_idx != -1:
             lb_x, ub_x = min(drag_x, self._x_obj[lb_idx]), max(drag_x, self._x_obj[lb_idx])
             lb_y, ub_y = min(drag_y, self._y_obj[lb_idx]), max(drag_y, self._y_obj[lb_idx])
@@ -120,6 +121,7 @@ class Draggable(object):
             x1, y1 = drag_x, drag_y
             x2, y2 = self._x_obj[ub_idx], self._y_obj[ub_idx]
             qp.drawLine(x1, y1, x2, y2)
+
 
         qp.end()
 
