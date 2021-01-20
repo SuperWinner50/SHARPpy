@@ -1026,10 +1026,10 @@ class Main(QMainWindow):
                "help maintain a standard source of sounding routines.\n\n"
         txt += desc
         txt += versioning_info()
-        #txt += "PySide version: " + str(PySide.__version__) + '\n'
-        #txt += "Numpy version: " + str(np.__version__) + '\n'
-        #txt += "Python version: " + str(platform.python_version()) + '\n'
-        #txt += "Qt version: " + str(PySide.QtCore.__version__)
+        txt += "PySide version: " + str(PySide.__version__) + '\n'
+        txt += "Numpy version: " + str(np.__version__) + '\n'
+        txt += "Python version: " + str(platform.python_version()) + '\n'
+        txt += "Qt version: " + str(PySide.QtCore.__version__)
         txt += "\n\nContribute: https://github.com/sharppy/SHARPpy/"
         msgBox.setText(txt)
         msgBox.exec_()
@@ -1205,17 +1205,8 @@ def main():
         app = QApplication.instance()
 
     #win = createWindow(args.file_names, collect=args.collect, close=False)
-    # Check to see if there's a newer version of SHARPpy on Github Releases
-    latest = check_latest()
-
-    if latest[0] is False:
-        logging.info("A newer release of SHARPpy was found on Github Releases.")
-    else:
-        logging.info("This is the most recent version of SHARPpy.")
 
     # Alert the user that there's a newer version on Github (and by extension through CI also on pip and conda)
-    if latest[0] is False:
-        newerRelease(latest)    
 
     if args.dt is not None and args.ds is not None and args.stn is not None:
         dt = date.datetime.strptime(args.dt, "%Y%m%d/%H")   

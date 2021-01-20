@@ -36,7 +36,7 @@ class backgroundWinds(QtWidgets.QFrame):
         ## used in converting to pixel units
         self.hmax = 16.; self.hmin = 0.
         self.smax = 80.; self.smin = 0.
-        self.font_ratio = 0.0512
+        self.font_ratio = 0.04
         self.label_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio))
         ## initialize the QPixmap
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
@@ -78,32 +78,34 @@ class backgroundWinds(QtWidgets.QFrame):
         
         '''
         ## initialize a new pen with white color, thickness of 2, solid line.
+        zero = self.speed_to_pix(15.)
+        classic1 = self.speed_to_pix(40.)
+        classic2 = self.speed_to_pix(70.)
+
         pen = QtGui.QPen(self.fg_color, 2, QtCore.Qt.SolidLine)
         qp.setPen(pen)
         qp.setFont(self.label_font)
-        qp.drawText(15, 5, 45, 35,
-            QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter,
+        qp.drawText(zero + 1, 15, classic1-zero, 60,
+            QtCore.Qt.AlignHCenter,
             'SR Wind\nv.\nHeight')
         ## draw the frame borders
         qp.drawLine(self.tlx, self.tly, self.brx, self.tly)
         qp.drawLine(self.brx, self.tly, self.brx, self.bry)
         qp.drawLine(self.brx, self.bry, self.tlx, self.bry)
         qp.drawLine(self.tlx, self.bry, self.tlx, self.tly)
+
         pen = QtGui.QPen(self.fg_color, 1, QtCore.Qt.DashLine)
         qp.setPen(pen)
-        zero = self.speed_to_pix(15.)
-        qp.drawLine( zero, self.bry, zero, self.tly)
+        qp.drawLine(zero, self.bry, zero, self.tly)
         lower = self.hgt_to_pix(8.)
         upper = self.hgt_to_pix(16.)
-        classic1 = self.speed_to_pix(40.)
-        classic2 = self.speed_to_pix(70.)
         pen = QtGui.QPen(self.clsc_color, 1, QtCore.Qt.DashLine)
         qp.setPen(pen)
         qp.drawLine( classic1, lower, classic1, upper )
         qp.drawLine( classic2, lower, classic2, upper )
-        qp.drawText(classic1-5, 2, 50, 50,
-            QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter,
-            'Classic\nSupercell')
+        qp.drawText(classic1-5, 0, 5+classic2-classic1, 70,
+                    QtCore.Qt.AlignCenter,
+                    'Classic\nSupercell')
         ## draw the plot description text
 
     def draw_height(self, h, qp):

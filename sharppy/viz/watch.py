@@ -33,7 +33,7 @@ class backgroundWatch(QtWidgets.QFrame):
         else:
             fsize = 12
         #fsize = 10
-        self.font_ratio = 0.0512
+        self.font_ratio = 0.04
         self.title_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio) + 5)
         self.plot_font = QtGui.QFont('Helvetica', round(self.size().height() * self.font_ratio) + 4)
         self.title_metrics = QtGui.QFontMetrics( self.title_font )

@@ -62,7 +62,7 @@ class backgroundSkewT(QWidget):
         self.label_metrics = QtGui.QFontMetrics(self.label_font)
 
         self.environment_trace_font = QtGui.QFont('Helvetica', 11 + (self.hgt * 0.0045))
-        self.in_plot_font = QtGui.QFont('Helvetica', fsize + (self.hgt * 0.0045))
+        self.in_plot_font = QtGui.QFont('Helvetica', fsize * 0.8 + (self.hgt * 0.0045))
         self.esrh_font = QtGui.QFont('Helvetica', fsize + 2 + (self.hgt * 0.0045))
         self.hght_font = QtGui.QFont('Helvetica', 9 + (self.hgt * 0.0045))
 
@@ -94,7 +94,8 @@ class backgroundSkewT(QWidget):
             self.draw_isotherm(t, qp)
         #for tw in range(self.bltmpc, self.brtmpc, 10): self.draw_moist_adiabat(tw, qp)
         for theta in np.arange(self.bltmpc, 80, 20): self.draw_dry_adiabat(theta, qp)
-        for w in [2] + np.arange(4, 33, 4): self.draw_mixing_ratios(w, 600, qp)
+        for w in [2] + np.arange(4, 33, 4):
+            self.draw_mixing_ratios(w, 600, qp)
         self.draw_frame(qp)
         for p in [1000, 850, 700, 500, 300, 200, 100]:
             self.draw_isobar(p, 1, qp)
@@ -202,7 +203,7 @@ class backgroundSkewT(QWidget):
         t = tab.thermo.temp_at_mixrat(w, pmin)
         x2 = self.originx + self.tmpc_to_pix(t, pmin) / self.scale
         y2 = self.originy + self.pres_to_pix(pmin) / self.scale
-        rectF = QtCore.QRectF(x2-5, y2-10, 10, 10)
+        rectF = QtCore.QRectF(x2-5, y2-10, 15, 15)
         pen = QtGui.QPen(self.bg_color, 1, QtCore.Qt.SolidLine)
         brush = QtGui.QBrush(self.bg_color, QtCore.Qt.SolidPattern)
         qp.setPen(pen)
@@ -1020,7 +1021,8 @@ class plotSkewT(backgroundSkewT):
         else:
             # DRAW THE MAX LAPSE RATE
             self.draw_max_lapse_rate_layer(qp)
-            self.draw_temp_levels(qp)
+            # Dont draw tevels
+            # self.draw_temp_levels(qp)
 
         self.drawTrace(self.dwpc, self.dewp_color, qp, stdev=self.dew_stdev)
 
@@ -1301,7 +1303,7 @@ class plotSkewT(backgroundSkewT):
             #x2 = self.tmpc_to_pix(32, 1000)
             y1 = self.originy + self.pres_to_pix(pbot) / self.scale
             y2 = self.originy + self.pres_to_pix(ptop) / self.scale
-            rect3 = QtCore.QRectF(x1-15, y2-self.esrh_height, 50, self.esrh_height)
+            rect3 = QtCore.QRectF(x1-40, y2-self.esrh_height, 80, self.esrh_height)
             pen = QtGui.QPen(self.bg_color, 0, QtCore.Qt.SolidLine)
             brush = QtGui.QBrush(self.bg_color, QtCore.Qt.SolidPattern)
             qp.setPen(pen)
@@ -1328,7 +1330,7 @@ class plotSkewT(backgroundSkewT):
             qp.drawLine(x1, y1, x1, y2)
             qp.setClipping(False)
 
-            qp.drawText(rect3, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft,
+            qp.drawText(rect3, QtCore.Qt.AlignCenter,
                 tab.utils.FLOAT2STR(self.prof.max_lapse_rate_2_6[0],1 ) + ' C/km')
 
 
@@ -1348,7 +1350,7 @@ class plotSkewT(backgroundSkewT):
             y2 = self.originy + self.pres_to_pix(ptop) / self.scale
             rect1 = QtCore.QRectF(x1-15, y1+2, 30, self.esrh_height)
             rect2 = QtCore.QRectF(x1-25, y2-self.esrh_height-3, 50, self.esrh_height)
-            rect3 = QtCore.QRectF(x1, (y1+y2-self.esrh_height)/2-2, 50, self.esrh_height)
+            rect3 = QtCore.QRectF(x1 + 1, (y1+y2-self.esrh_height)/2-2, 70, self.esrh_height)
             pen = QtGui.QPen(self.bg_color, 0, QtCore.Qt.SolidLine)
             brush = QtGui.QBrush(self.bg_color, QtCore.Qt.SolidPattern)
             qp.setPen(pen)

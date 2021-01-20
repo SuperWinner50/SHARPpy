@@ -89,7 +89,7 @@ class backgroundSlinky(QtWidgets.QFrame):
         qp.drawLine(self.brx, self.bry, self.tlx, self.bry)
         qp.drawLine(self.tlx, self.bry, self.tlx, self.tly)
 
-        yval = self.bry - self.title_height - self.os_mod - 2
+        yval = self.bry - self.os_mod - self.bpad
         rect0 = QtCore.QRect(self.lpad, yval, 20, self.title_height)
         qp.drawText(rect0, QtCore.Qt.TextDontClip | QtCore.Qt.AlignLeft, 'Storm Slinky')
     

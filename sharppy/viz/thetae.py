@@ -78,9 +78,9 @@ class backgroundThetae(QtWidgets.QFrame):
         qp.setRenderHint(qp.TextAntialiasing)
         self.draw_frame(qp)
         ## draw the isobar ticks and the theta-e ticks
-        for p in [1000, 900, 800, 700, 600, 500]:
+        for p in [500, 600, 700, 800, 900]:
             self.draw_isobar(p, qp)
-        for t in np.arange( 200, 400, 10):
+        for t in np.arange(300, 400, 20):
             self.draw_thetae(t, qp)
         qp.end()
 
@@ -108,8 +108,8 @@ class backgroundThetae(QtWidgets.QFrame):
         qp.drawLine(self.tlx, self.bry, self.tlx, self.tly)
         qp.setFont(self.label_font)
         ## draw the plot name on the background
-        qp.drawText(35, 15, 50, 50,
-                    QtCore.Qt.AlignVCenter | QtCore.Qt.AlignHCenter,
+        qp.drawText(0, 10, self.brx, 60,
+                    QtCore.Qt.AlignCenter,
                     'Theta-E\nv.\nPres')
 
     def draw_isobar(self, p, qp):
@@ -133,10 +133,10 @@ class backgroundThetae(QtWidgets.QFrame):
         ## draw the isobar line and text
         qp.drawLine(self.lpad, y1, self.lpad+offset, y1)
         qp.drawLine(self.brx+self.rpad-offset, y1,
-                self.brx+self.rpad, y1)
-        qp.drawText(0, y1-20, 20, 40,
-                QtCore.Qt.AlignVCenter | QtCore.Qt.AlignRight,
-                utils.INT2STR(p))
+                    self.brx+self.rpad, y1)
+        qp.drawText(5, y1-20, 30, 40,
+                    QtCore.Qt.AlignVCenter | QtCore.Qt.AlignLeft,
+                    utils.INT2STR(p))
 
     def draw_thetae(self, t, qp):
         '''
@@ -160,7 +160,7 @@ class backgroundThetae(QtWidgets.QFrame):
         qp.drawLine(x1, 0, x1, 0+offset)
         qp.drawLine(x1, self.bry+self.tpad-offset,
             x1, self.bry+self.rpad)
-        qp.drawText(x1, self.bry-20, 15, 20,
+        qp.drawText(x1-15, self.bry-22, 30, 20,
             QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter, utils.INT2STR(t))
 
     def pres_to_pix(self, p):

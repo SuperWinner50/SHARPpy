@@ -68,16 +68,6 @@ class backgroundSpeed(QtWidgets.QFrame):
             else:
                 label=False
             self.draw_speed(s, qp, int(self.delta), label)
-        ## Draw the title and units
-        pen = QtGui.QPen(QtGui.QColor(self.fg_color), 1, QtCore.Qt.DashLine)
-        qp.setPen(pen)
-
-        fsize = round(self.size().width() * self.font_ratio)
-        self.title_font = QtGui.QFont('Helvetica', fsize+1)
-        qp.setFont(self.title_font)
-        qp.drawText(self.tlx+2, self.tly+2, self.brx-self.tlx, 30,
-                   QtCore.Qt.AlignTop | QtCore.Qt.AlignLeft | QtCore.Qt.TextWordWrap, "Wind Speed\n(" + self.wind_units + ")")
-        qp.end() 
 
 
     def draw_frame(self, qp):
@@ -107,15 +97,8 @@ class backgroundSpeed(QtWidgets.QFrame):
         qp.setFont(self.label_font)
         ## convert the speed value to pixel coordinates
         x1 = self.speed_to_pix(s)
-        labelx1 = self.speed_to_pix(s - delta) # e.g. 20 - 20 = 0, 0 to 40
-        label_width = self.speed_to_pix(s+delta) - self.speed_to_pix(s-delta)
         ## draw a dashed line of constant wind speed value
         qp.drawLine(x1, self.bry, x1, self.tly)
-        if drawlabel is True and s > 0:
-            pen = QtGui.QPen(QtGui.QColor(self.fg_color), 1, QtCore.Qt.DashLine)
-            qp.setPen(pen)
-            qp.drawText(labelx1, self.bry+5, label_width, 10,
-                   QtCore.Qt.AlignTop | QtCore.Qt.AlignCenter, str(int(s)))
     
     def pres_to_pix(self, p):
         '''
