@@ -85,13 +85,15 @@ class Draggable(object):
         drag_x: x coordinate in pixels of the drag point.
         drag_y: y coordinate in pixels of the drag point.
         """
+        # Used getmaskarray() to get list of False if there are no invalid entries
+        _x_obj_mask = np.ma.getmaskarray(self._x_obj)
+        _y_obj_mask = np.ma.getmaskarray(self._y_obj)
         lb_idx, ub_idx = max(self._drag_idx - 1, 0), min(self._drag_idx + 1, self._x_obj.shape[0] - 1)
 
-        # Removed the indexing because mask lengths were 1
-        while lb_idx >= 0 and (self._x_obj.mask or self._y_obj.mask):
+        while lb_idx >= 0 and (_x_obj_mask[lb_idx] or _y_obj_mask[lb_idx]):
             lb_idx -= 1
 
-        while ub_idx < self._x_obj.shape[0] and (self._x_obj.mask or self._y_obj.mask):
+        while ub_idx < self._x_obj.shape[0] and (_x_obj_mask[ub_idx] or _y_obj_mask[ub_idx]):
             ub_idx += 1
         
         if lb_idx != -1:
