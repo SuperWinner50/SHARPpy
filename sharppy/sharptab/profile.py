@@ -190,7 +190,7 @@ class Profile(object):
 
         return new_prof
 
-    def toFile(self, file_name):
+    def toFile(self, file_name, model=False):
         snd_file = open(file_name, 'w')
         def qc(val):
             return -9999. if not utils.QC(val) else val
@@ -211,7 +211,8 @@ class Profile(object):
                 str += "%8.2f,  " % qc(self.__dict__[col][idx])
 
             snd_file.write(str[:-3] + "\n")
-        snd_file.write("%END%\n")
+        if not model:
+            snd_file.write("%END%\n")
         snd_file.close()
 
     def checkDataIntegrity(self):

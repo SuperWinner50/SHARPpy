@@ -150,7 +150,7 @@ class SPCWidget(QWidget):
                          "  border-color: " + fg_hex + ";"
                          "  margin: 0px;}")
 
-        self.brand = QLabel("SHARPpy v%s %s" % (__version__, __version_name__))
+        self.brand = QLabel("Super-SHARPpy v%s %s" % (__version__, __version_name__))
         self.brand.setAlignment(Qt.AlignRight)
         self.brand.setStyleSheet("QFrame {"
                              "  background-color: " + bg_hex + ";"
@@ -242,6 +242,32 @@ class SPCWidget(QWidget):
             self.default_prof.toFile(file_name)
             self.config['paths', 'save_txt'] = os.path.dirname(file_name)
 
+    def savecm1(self):
+        warn = False
+        logging.debug("Save the data to the disk.")
+
+        # Check for masked values, might be an easier way to do this
+        for idx in range(self.default_prof.pres.shape[0]):
+            for col in ['pres', 'hght', 'tmpc', 'dwpc', 'wdir', 'wspd']:
+                if not tab.utils.QC(self.default_prof.__dict__[col][idx]):
+                    warn = True
+
+        if warn:
+            message = QMessageBox()
+            message.setIcon(QMessageBox.Information)
+            message.setWindowTitle('Warning')
+            message.setText(
+                'There are values in your sounding that may not be compatible with CM1. If you want to continue, please consider changing or removing them.')
+            message.exec_()
+
+        path = self.config['paths', 'save_txt']
+        file_types = "TXT (*.txt)"
+        file_name, result = QFileDialog.getSaveFileName(self, "Save Sounding Text", path, file_types)
+        if result:
+            self.default_prof.toFile(file_name, model=True)
+            self.config['paths', 'save_txt'] = os.path.dirname(file_name)
+
+
     def initData(self):
         """
         Initializes all the widgets for the window.
@@ -251,7 +277,7 @@ class SPCWidget(QWidget):
         logging.debug("Initializing all widgets in the SPCWindow.")
 
         self.sound = plotSkewT(dgz=self.dgz, pbl=self.pbl)
-#       self.sound.setPreferences(temp_color=temp_color, dewp_color=dewp_color, update_gui=False)
+        # self.sound.setPreferences(temp_color=temp_color, dewp_color=dewp_color, update_gui=False)
         self.hodo = plotHodo()
 
         ## initialize the non-swappable insets
@@ -267,7 +293,7 @@ class SPCWidget(QWidget):
         # initialize swappable insets
         for inset, inset_gen in SPCWidget.inset_generators.items():
             self.insets[inset] = inset_gen()
-#            self.insets[inset].setParent(self.text)
+            # self.insets[inset].setParent(self.text)
 
         self.updateConfig(self.config, update_gui=False)
 
@@ -800,6 +826,10 @@ class SPCWindow(QMainWindow):
         savetext = QAction("Save Text", self, shortcut=QKeySequence("Ctrl+Shift+S"))
         savetext.triggered.connect(self.spc_widget.savetext)
         filemenu.addAction(savetext)
+
+        savecm1 = QAction("Save CM1 Text File", self)
+        savecm1.triggered.connect(self.spc_widget.savecm1)
+        filemenu.addAction(savecm1)
 
         self.profilemenu = bar.addMenu("Profiles")
 
