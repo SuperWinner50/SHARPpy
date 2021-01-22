@@ -66,7 +66,6 @@ class backgroundHodo(QFrame):
 
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
         self.saveBitMap = None
-        self.plotBitMap.fill(self.bg_color)
         self.plotBackground()
         self.backgroundBitMap = self.plotBitMap.copy()
 
@@ -330,8 +329,8 @@ class plotHodo(backgroundHodo):
         self.bg_color = QtGui.QColor("#000000")
         self.fg_color = QtGui.QColor("#FFFFFF")
         self.isotach_color = QtGui.QColor("#555555")
-
         super(plotHodo, self).__init__(**kwargs)
+
         self.prof = None
         self.pc_idx = 0
         self.prof_collections = []
@@ -479,6 +478,7 @@ class plotHodo(backgroundHodo):
         ## if you want the storm motion vector, you need to
         ## provide the profile.
         self.srwind = self.prof.srwind
+        self.ptop = self.prof.etop
         self.ptop = self.prof.etop
         self.pbottom = self.prof.ebottom
 
@@ -925,7 +925,7 @@ class plotHodo(backgroundHodo):
         ----------
         e: an Event object
         '''
-        super(plotHodo, self).resizeEvent(e)
+        super().resizeEvent(e)
         self.plotData()
 
     def paintEvent(self, e):
@@ -1066,16 +1066,12 @@ class plotHodo(backgroundHodo):
         mean_u, mean_v = self.uv_to_pix(mean_u, mean_v)
         half_length = (8./2.)
         qp.drawRect(mean_u-half_length, mean_v+half_length, 8, 8)
-        # This probably needs to be checked. 
+        # This probably needs to be checked.
 
-        color = self.bg_color
-        color.setAlpha(0)
-        pen = QtGui.QPen(color, 0, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
+        # Removed some redundant code
         v_offset = 5; h_offset = 1; width = 60; hght = 12
 
         mw_rect = QtCore.QRectF(mean_u+h_offset, mean_v+v_offset, width, hght)
-        qp.drawRect(mw_rect)
 
         pen = QtGui.QPen(QtGui.QColor("#B8860B"))
         qp.setPen(pen)
@@ -1133,18 +1129,12 @@ class plotHodo(backgroundHodo):
         qp.drawEllipse(center_up, 3, 3)
         qp.drawEllipse(center_dn, 3, 3)
 
-        color = self.bg_color
-        color.setAlpha(0)
-        pen = QtGui.QPen(color, 0, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
+        # Removed redundant code
         v_offset = 3; h_offset = 1; width = 100; hght = 15
         
         up_rect = QtCore.QRectF(up_u+h_offset, up_v+v_offset, width, hght)
         dn_rect = QtCore.QRectF(dn_u+h_offset, dn_v+v_offset, width, hght)
-        qp.drawRect(up_rect)
-        qp.drawRect(dn_rect) 
-        ## now make the pen white and draw text using
-        ## the invisible rectangles
+
         pen = QtGui.QPen(QtGui.QColor("#00BFFF"))
         qp.setPen(pen)
         qp.setFont(self.label_font)
@@ -1243,17 +1233,11 @@ class plotHodo(backgroundHodo):
                 qp.drawLine(center_rm.x(), center_rm.y(), uubot, vvbot)
                 qp.drawLine(center_rm.x(), center_rm.y(), uutop, vvtop)
                 
-        color = self.bg_color
-        color.setAlpha(0)
-        pen = QtGui.QPen(color, 0, QtCore.Qt.SolidLine)
-        qp.setPen(pen)
+        # Removed some redundant code
         h_offset = 2; v_offset = 5; width = 90; hght = 15
         rm_rect = QtCore.QRectF(ruu+h_offset, rvv+v_offset, width, hght)
         lm_rect = QtCore.QRectF(luu+h_offset, lvv+v_offset, width, hght)
-        qp.drawRect(rm_rect)
-        qp.drawRect(lm_rect) 
-        ## now make the pen white and draw text using
-        ## the invisible rectangles
+
         pen = QtGui.QPen(self.fg_color)
         qp.setPen(pen)
         qp.setFont(self.label_font)
