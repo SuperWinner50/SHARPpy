@@ -66,6 +66,7 @@ class backgroundHodo(QFrame):
 
         self.plotBitMap = QtGui.QPixmap(self.width(), self.height())
         self.saveBitMap = None
+        self.plotBitMap.fill(self.bg_color)
         self.plotBackground()
         self.backgroundBitMap = self.plotBitMap.copy()
 
@@ -478,7 +479,6 @@ class plotHodo(backgroundHodo):
         ## if you want the storm motion vector, you need to
         ## provide the profile.
         self.srwind = self.prof.srwind
-        self.ptop = self.prof.etop
         self.ptop = self.prof.etop
         self.pbottom = self.prof.ebottom
 
