@@ -339,6 +339,7 @@ class plotHodo(backgroundHodo):
         self.all_observed = False
 
         self.colors = [
+            QtGui.QColor("#E000E0"),
             QtGui.QColor("#FF0000"), 
             QtGui.QColor("#00FF00"), 
             QtGui.QColor("#FFFF00"), 
@@ -346,6 +347,7 @@ class plotHodo(backgroundHodo):
         ]
 
         self.ens_colors = [
+            QtGui.QColor('#AA00AA'),
             QtGui.QColor("#880000"), 
             QtGui.QColor("#008800"), 
             QtGui.QColor("#888800"), 
@@ -586,7 +588,8 @@ class plotHodo(backgroundHodo):
         self.crit_color = QtGui.QColor(kwargs['hodo_crit_color'])
 
         self.colors = [
-            QtGui.QColor(kwargs['0_3_color']),
+            QtGui.QColor(kwargs['0_1_color']),
+            QtGui.QColor(kwargs['1_3_color']),
             QtGui.QColor(kwargs['3_6_color']),
             QtGui.QColor(kwargs['6_9_color']),
             QtGui.QColor(kwargs['9_12_color']),
@@ -1333,13 +1336,14 @@ class plotHodo(backgroundHodo):
         xx, yy = self.uv_to_pix(u, v)
         ## define the colors for the different hodograph heights
         penwidth = width
-        seg_bnds = np.maximum([0., 3000., 6000., 9000., 12000.], z.min())
+        seg_bnds = np.maximum([0., 1000., 3000., 6000., 9000., 12000.], z.min())
         seg_x = [ tab.interp.generic_interp_hght(bnd, z, xx) for bnd in seg_bnds if bnd <= z.max() ]
         seg_y = [ tab.interp.generic_interp_hght(bnd, z, yy) for bnd in seg_bnds if bnd <= z.max() ]
 
         seg_idxs = np.searchsorted(z, seg_bnds)
         for idx in range(len(seg_x) - 1):
             ## define a pen to draw with
+            print(colors[idx])
             pen = QtGui.QPen(colors[idx], penwidth)
             pen.setStyle(QtCore.Qt.SolidLine)
             qp.setPen(pen)
@@ -1399,7 +1403,7 @@ class plotHodo(backgroundHodo):
         qp.setPen(pen)
         qp.setBrush(Qt.NoBrush)
 
-        seg_bnds = [0., 3000., 6000., 9000., 12000.]
+        seg_bnds = [0., 1000., 3000., 6000., 9000., 12000.]
         seg_x = [ tab.interp.generic_interp_hght(bnd, z, xx) for bnd in seg_bnds if bnd <= z.max() ]
         seg_y = [ tab.interp.generic_interp_hght(bnd, z, yy) for bnd in seg_bnds if bnd <= z.max() ]
 
