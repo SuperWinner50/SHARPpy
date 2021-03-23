@@ -1343,7 +1343,6 @@ class plotHodo(backgroundHodo):
         seg_idxs = np.searchsorted(z, seg_bnds)
         for idx in range(len(seg_x) - 1):
             ## define a pen to draw with
-            print(colors[idx])
             pen = QtGui.QPen(colors[idx], penwidth)
             pen.setStyle(QtCore.Qt.SolidLine)
             qp.setPen(pen)
