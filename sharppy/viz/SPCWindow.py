@@ -233,6 +233,10 @@ class SPCWidget(QWidget):
         fmt = file_name.split(".")[-1].upper()
         self.grab().save(file_name, fmt, 100)
 
+    def copyimage(self):
+        logging.debug("Copy an image of the SPCWindow to the clipboard.")
+        QApplication.clipboard().setPixmap(self.grab())
+
     def savetext(self):
         logging.debug("Save the data to the disk.")
         path = self.config['paths', 'save_txt']
@@ -266,6 +270,7 @@ class SPCWidget(QWidget):
         if result:
             self.default_prof.toFile(file_name, model=True)
             self.config['paths', 'save_txt'] = os.path.dirname(file_name)
+
 
 
     def initData(self):
@@ -822,6 +827,10 @@ class SPCWindow(QMainWindow):
         saveimage = QAction("Save Image", self, shortcut=QKeySequence("Ctrl+S"))
         saveimage.triggered.connect(self.spc_widget.saveimage)
         filemenu.addAction(saveimage)
+
+        copyimage = QAction("Copy Image", self, shortcut=QKeySequence("Ctrl+C"))
+        copyimage.triggered.connect(self.spc_widget.copyimage)
+        filemenu.addAction(copyimage)
 
         savetext = QAction("Save Text", self, shortcut=QKeySequence("Ctrl+Shift+S"))
         savetext.triggered.connect(self.spc_widget.savetext)
